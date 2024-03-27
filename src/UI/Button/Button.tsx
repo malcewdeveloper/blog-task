@@ -53,13 +53,15 @@ const Button: React.FC<IButtonProps> = (props) => {
         color,
         startIcon,
         endIcon,
-        variant='outlined'
+        variant='outlined',
+        ...other
     } = props;
 
     return (
         <StyledButton
         color={ color }
-        variant={ variant }>
+        variant={ variant }
+        {...other}>
             { startIcon && <StyledStartIcon>{ startIcon }</StyledStartIcon> }
             { children }
             { endIcon && <StyledEndIcon>{ endIcon }</StyledEndIcon> }
