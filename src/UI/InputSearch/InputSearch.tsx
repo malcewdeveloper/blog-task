@@ -10,15 +10,14 @@ interface IInputSearchProps extends React.InputHTMLAttributes<HTMLInputElement> 
 
 const StyledRootInputSearch = styled.div`
     position: relative;
-    border: 1px solid #919EAB52;
-    width: 100%;
 `; 
 
 const StyledInputSearch = styled.input`
-    width: 100%;
     height: 48px;
-    border: none;
-    padding: 0 12px;
+    width: 100%;
+    border: 1px solid #919EAB52;
+    border-radius: 6px;
+    box-sizing: border-box;
     padding-left: 45px;
     &::-webkit-input-placeholder {
         color: #333333;
@@ -36,8 +35,9 @@ const StyledInputSearch = styled.input`
 
 const StyledInputSearchIcon = styled.span`
     position: absolute;
-    margin-top: 12px;
-    margin-left: 14px;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
     z-index: 1;
 `
 

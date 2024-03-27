@@ -14,6 +14,7 @@ const StyledCard = styled.article<{fullwidth?: boolean}>`
     background-color: #F4F4F4;
     border-radius: 12px;
     max-width: ${props => props.fullwidth ? '100%' : '558px'};
+    width: 100%;
     overflow: hidden;
     box-shadow: 0px 10px 20px 0px #0000000A;
 `
@@ -21,7 +22,6 @@ const StyledCard = styled.article<{fullwidth?: boolean}>`
 const StyledImageWrapper = styled.div`
     position: relative;
     width: 100%;
-    height: 100%;
     padding-bottom: 50%;
 `
 
