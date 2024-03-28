@@ -15,6 +15,26 @@ const Container = styled.section`
     box-sizing: border-box;
 `
 
+const Title = styled.h1`
+    font-size: 60px;
+    text-align: center;
+    margin-bottom: 24px;
+    margin-top: 64px;
+`
+const Typography = styled.p`
+    font-size: 24px;
+    line-height: 32px;
+`
+
+const Wrapper = styled.div`
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(48%, 1fr));
+    gap: 24px;
+    margin-top: 24px;
+    margin-bottom: 64px;
+`
+
+
 export default function Blog() {
     const [posts, setPosts] = React.useState<IPost[] | null>(null);
 
@@ -28,45 +48,45 @@ export default function Blog() {
         fetchPosts()
     }, []);
 
+    const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        
+    }
+
     return (
-        <main>
-            <Container>
-                <h1 style={{ fontSize: '60px', textAlign: 'center', marginBottom: '24px', marginTop: '64px' }}>Блог</h1>
-                <p style={{ fontSize: '24px', lineHeight: '32px' }}>Здесь мы делимся интересными кейсами из наших проектов, пишем про IT, а также переводим зарубежные статьи</p>
-                <InputSearch startIcon={ <IoSearch size={ 24 } /> } id="search" name="search" placeholder="Поиск по названию статьи" style={{ marginBottom: '32px' }} />
+        <Container>
+            <Title>Блог</Title>
+            <Typography style={{ fontSize: '24px', lineHeight: '32px' }}>Здесь мы делимся интересными кейсами из наших проектов, пишем про IT, а также переводим зарубежные статьи</Typography>
+            <InputSearch onChange={ handleSearch } startIcon={ <IoSearch size={ 24 } /> } id="search" name="search" placeholder="Поиск по названию статьи" style={{ marginBottom: '32px' }} />
+            {posts ? 
+            posts.slice(0, 1).map(post => 
+            <Card 
+            key={ post.id }
+            fullwidth
+            description={ post.body }
+            header={
+                <div style={{ display: "flex", alignItems: 'center', justifyContent: 'space-between' }}>
+                    <h3 style={{ fontSize: '28px' }}>{ post.title }</h3>
+                    <div>
+                        <Button variant='text' startIcon={<BiLike size={ 24 } />}>100</Button>
+                        <Button variant='text' startIcon={ <BiDislike size={ 24 } /> }>100</Button>
+                    </div>
+                </div>
+            } />) :
+            'Loading...'}
+            <Wrapper>
                 {posts ? 
-                posts.slice(0, 1).map(post => 
+                posts.slice(1).map(post => 
                 <Card 
                 key={ post.id }
-                fullwidth
-                description={ post.body }
-                header={
-                    <div style={{ display: "flex", alignItems: 'center', justifyContent: 'space-between' }}>
-                        <h3 style={{ fontSize: '28px' }}>{ post.title }</h3>
-                        <div>
-                            <Button variant='text' startIcon={<BiLike size={ 24 } />}>100</Button>
-                            <Button variant='text' startIcon={ <BiDislike size={ 24 } /> }>100</Button>
-                        </div>
+                header={ post.title }
+                actions={
+                    <div>
+                        <Button variant='text' startIcon={<BiLike size={ 24 } />}>100</Button>
+                        <Button variant='text' startIcon={ <BiDislike size={ 24 } /> }>100</Button>
                     </div>
-                } />) :
+                }/>) :
                 'Loading...'}
-
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(48%, 1fr))', gap: '24px', marginTop: '24px', marginBottom: '64px'}}>
-                    {posts ? 
-                    posts.slice(1).map(post => 
-                    <Card 
-                    key={ post.id }
-                    header={ post.title }
-                    actions={
-                        <div>
-                            <Button variant='text' startIcon={<BiLike size={ 24 } />}>100</Button>
-                            <Button variant='text' startIcon={ <BiDislike size={ 24 } /> }>100</Button>
-                        </div>
-                    }/>) :
-                    'Loading...'}
-                </div>
-
-            </Container>
-        </main>
+            </Wrapper>
+        </Container>
     )
 }
