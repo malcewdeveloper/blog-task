@@ -55,6 +55,18 @@ const Typography = styled.p`
     margin: 0;
 `
 
+const StyledButtonLink = styled(Link)`
+    display: inline-flex;
+    align-items: center;
+    border: none;
+    font-size: 24px;
+    background-color: transparent;
+    color: #4F4F4F;
+    cursor: pointer;
+    line-height: 18.75px;
+    text-decoration: none;
+`
+
 
 export default function Post() {
     const { id } = useParams();
@@ -70,7 +82,7 @@ export default function Post() {
     return (
         <Container>
             <HeaderWrapper>
-                <Button style={{ fontSize: '24px' }} startIcon={ <FaArrowLeftLong size={ 18 } /> } variant='text'>Вернуться к статьям</Button>
+                <StyledButtonLink to="/"><FaArrowLeftLong size={ 18 } />&nbsp;Вернуться к статьям</StyledButtonLink>
                 <div>
                     {loading === 'pending' ? 'Загрузка' : <Button onClick={() => dispatch(like(entities[0]?.id))} variant='text' startIcon={entities[0]?.liked ? <BiSolidLike color="#219653" size={ 24 } /> : <BiSolidLike color="#3A35418A" size={ 24 } />}>{entities[0]?.likes}</Button>}
                     {loading === 'pending' ? 'Загрузка' : <Button onClick={() => dispatch(dislike(entities[0]?.id))} variant='text' startIcon={entities[0]?.disliked ? <BiSolidDislike size={ 24 } color="#EB5757" /> : <BiSolidDislike size={ 24 } color="#3A35418A" /> }>{entities[0]?.dislikes}</Button>}
