@@ -1,7 +1,12 @@
 import React from "react";
 import { Button } from "../../UI";
+import { Link } from "react-router-dom";
 import { FaArrowLeftLong } from "react-icons/fa6";
-import { BiLike, BiDislike } from "react-icons/bi";
+import { BiSolidLike, BiSolidDislike } from "react-icons/bi";
+import { fetchPostById } from "../../redux/slices/posts/postsSlice";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { like, dislike } from "../../redux/slices/posts/postsSlice";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
 
@@ -13,13 +18,21 @@ const Container = styled.section`
     box-sizing: border-box;
 `
 
-const Wrapper = styled.div`
+const HeaderWrapper = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-top: 48px;
     margin-bottom: 32px;
+
 `
+
+const Wrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+`
+
 const Title = styled.h1`
     text-align: center;
     font-size: 40px;
@@ -44,20 +57,30 @@ const Typography = styled.p`
 
 
 export default function Post() {
+    const { id } = useParams();
+    const dispatch = useAppDispatch();
+    const { entities, loading } = useAppSelector(store => store.posts);
+
+    if(!id) return <h1>404 Not Found</h1>
+
+    React.useEffect(() => {
+        dispatch(fetchPostById(id))
+    }, []);
+
     return (
         <Container>
-            <Wrapper>
+            <HeaderWrapper>
                 <Button style={{ fontSize: '24px' }} startIcon={ <FaArrowLeftLong size={ 18 } /> } variant='text'>Вернуться к статьям</Button>
                 <div>
-                    <Button variant='text' startIcon={<BiLike size={ 24 } />}>100</Button>
-                    <Button variant='text' startIcon={ <BiDislike size={ 24 } /> }>100</Button>
+                    {loading === 'pending' ? 'Загрузка' : <Button onClick={() => dispatch(like(entities[0]?.id))} variant='text' startIcon={entities[0]?.liked ? <BiSolidLike color="#219653" size={ 24 } /> : <BiSolidLike color="#3A35418A" size={ 24 } />}>{entities[0]?.likes}</Button>}
+                    {loading === 'pending' ? 'Загрузка' : <Button onClick={() => dispatch(dislike(entities[0]?.id))} variant='text' startIcon={entities[0]?.disliked ? <BiSolidDislike size={ 24 } color="#EB5757" /> : <BiSolidDislike size={ 24 } color="#3A35418A" /> }>{entities[0]?.dislikes}</Button>}
                 </div>
-            </Wrapper>
-            <Wrapper style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <Title>Что нужно знать об эффективной интернет-рекламе?</Title>
-                <ContentWrapper style={{ maxWidth: '848px' }}>
+            </HeaderWrapper>
+            <Wrapper>
+                {loading === 'pending' ? 'Загрузка' : <Title>{ entities[0]?.title }</Title>}
+                <ContentWrapper>
                     <Image src="https://placehold.co/1200x600" />
-                    <Typography>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta earum velit, molestiae sunt facilis quam placeat eius repudiandae ab ipsam repellat, consequatur asperiores error officiis, sit quis itaque quia dicta!</Typography>
+                    {loading === 'pending' ? 'Загрузка' : <Typography>{ entities[0]?.body }</Typography>}
                 </ContentWrapper>
             </Wrapper>
         </Container>
