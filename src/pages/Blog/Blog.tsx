@@ -2,9 +2,11 @@ import React from "react";
 import styled from "styled-components";
 import { Card } from "../../components";
 import { Button, InputSearch } from "../../UI";
-import { BiLike, BiDislike } from "react-icons/bi";
+import { BiSolidDislike, BiSolidLike } from "react-icons/bi";
 import { IoSearch } from "react-icons/io5";
-import { IPost } from "../../interfaces";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { fetchPosts } from "../../redux/slices/posts/postsSlice";
+import { like, dislike } from "../../redux/slices/posts/postsSlice";
 
 
 const Container = styled.section`
@@ -36,16 +38,12 @@ const Wrapper = styled.div`
 
 
 export default function Blog() {
-    const [posts, setPosts] = React.useState<IPost[] | null>(null);
+    const dispatch = useAppDispatch();
+    const { entities, loading } = useAppSelector(state => state.posts);
+    console.log(entities);
 
     React.useEffect(() => {
-        const fetchPosts = async () => {
-            const response = await fetch('https://jsonplaceholder.typicode.com/todos?_limit=5');
-            const posts = await response.json();
-            setPosts(posts)
-        }
-
-        fetchPosts()
+        dispatch(fetchPosts())
     }, []);
 
     const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,10 +53,10 @@ export default function Blog() {
     return (
         <Container>
             <Title>Блог</Title>
-            <Typography style={{ fontSize: '24px', lineHeight: '32px' }}>Здесь мы делимся интересными кейсами из наших проектов, пишем про IT, а также переводим зарубежные статьи</Typography>
+            <Typography>Здесь мы делимся интересными кейсами из наших проектов, пишем про IT, а также переводим зарубежные статьи</Typography>
             <InputSearch onChange={ handleSearch } startIcon={ <IoSearch size={ 24 } /> } id="search" name="search" placeholder="Поиск по названию статьи" style={{ marginBottom: '32px' }} />
-            {posts ? 
-            posts.slice(0, 1).map(post => 
+            {loading === 'idle' ? 
+            entities.slice(0, 1).map(post => 
             <Card 
             key={ post.id }
             fullwidth
@@ -67,22 +65,22 @@ export default function Blog() {
                 <div style={{ display: "flex", alignItems: 'center', justifyContent: 'space-between' }}>
                     <h3 style={{ fontSize: '28px' }}>{ post.title }</h3>
                     <div>
-                        <Button variant='text' startIcon={<BiLike size={ 24 } />}>100</Button>
-                        <Button variant='text' startIcon={ <BiDislike size={ 24 } /> }>100</Button>
+                        <Button onClick={() => dispatch(like(post.id))} variant='text' startIcon={post.liked ? <BiSolidLike color="#219653" size={ 24 } /> : <BiSolidLike color="#3A35418A" size={ 24 } />}>{ post.likes }</Button>
+                        <Button onClick={() => dispatch(dislike(post.id))} variant='text' startIcon={post.disliked ? <BiSolidDislike size={ 24 } color="#EB5757" /> : <BiSolidDislike size={ 24 } color="#3A35418A" /> }>{ post.dislikes }</Button>
                     </div>
                 </div>
             } />) :
             'Loading...'}
             <Wrapper>
-                {posts ? 
-                posts.slice(1).map(post => 
+                {loading === 'idle' ? 
+                entities.slice(1).map(post => 
                 <Card 
                 key={ post.id }
                 header={ post.title }
                 actions={
                     <div>
-                        <Button variant='text' startIcon={<BiLike size={ 24 } />}>100</Button>
-                        <Button variant='text' startIcon={ <BiDislike size={ 24 } /> }>100</Button>
+                        <Button onClick={() => dispatch(like(post.id))} variant='text' startIcon={post.liked ? <BiSolidLike color="#219653" size={ 24 } /> : <BiSolidLike color="#3A35418A" size={ 24 } />}>{ post.likes }</Button>
+                        <Button onClick={() => dispatch(dislike(post.id))} variant='text' startIcon={post.disliked ? <BiSolidDislike size={ 24 } color="#EB5757" /> : <BiSolidDislike size={ 24 } color="#3A35418A" /> }>{ post.dislikes }</Button>
                     </div>
                 }/>) :
                 'Loading...'}
