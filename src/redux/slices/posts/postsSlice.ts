@@ -45,7 +45,7 @@ export const postsSlice = createAppSlice({
             ))
         }),
         fetchPosts: create.asyncThunk(
-            async (params?: string) => {
+            async (params: string) => {
                 const response = await fetch(`https://jsonplaceholder.typicode.com/posts?${params}`);
                 const posts = await response.json() as IPost[];
                 return posts.reduce((acc, post) => [...acc, {...post, liked: false, disliked: false, likes: Math.floor(Math.random() * 50), dislikes: Math.floor(Math.random() * 50)}], [] as IPost[]);
@@ -68,9 +68,9 @@ export const postsSlice = createAppSlice({
         ),
         fetchPostById: create.asyncThunk(
             async (id: string) => {
-                const response = await fetch(`https://jsonplaceholder.typicode.com/posts?id=${id}`);
-                const posts = await response.json() as IPost[];
-                return { ...posts[0], liked: false, disliked: false, likes: Math.floor(Math.random() * 50), dislikes: Math.floor(Math.random() * 50) };
+                const response = await fetch(`https://jsonplaceholder.typicode.com/posts/${id}`);
+                const posts = await response.json() as IPost;
+                return { ...posts, liked: false, disliked: false, likes: Math.floor(Math.random() * 50), dislikes: Math.floor(Math.random() * 50) };
             },
             {
                 pending: (state) => {
@@ -81,7 +81,7 @@ export const postsSlice = createAppSlice({
                 },
                 fulfilled: (state, action) => {
                   state.loading = 'idle'
-                  state.entities.length > 0 ? state.entities.filter(entity => entity.id === action.payload.id) : state.entities.push(action.payload);
+                  state.entities.length > 0 ? state.entities = state.entities.filter(entity => entity.id === action.payload.id) : state.entities.push(action.payload);
                 },
             }
         )
