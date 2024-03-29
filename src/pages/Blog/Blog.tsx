@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import { Card } from "../../components";
 import { Button, InputSearch } from "../../UI";
 import { BiSolidDislike, BiSolidLike } from "react-icons/bi";
@@ -35,6 +35,21 @@ const Wrapper = styled.div`
     gap: 24px;
     margin-top: 24px;
     margin-bottom: 64px;
+`
+
+const StyledButtonLink = styled(Link)`
+    display: flex;
+    align-items: center;
+    border: 2px solid #0A0A0A;
+    border-radius: 60px;
+    background-color: transparent;
+    color: #0A0A0A;
+    cursor: pointer;
+    line-height: 18.75px;
+    padding: 14px 24px 12px;
+    max-height: 45px;
+    margin-left: auto;
+    text-decoration: none;
 `
 
 
@@ -84,6 +99,9 @@ export default function Blog() {
                         <Button onClick={() => dispatch(dislike(post.id))} variant='text' startIcon={post.disliked ? <BiSolidDislike size={ 24 } color="#EB5757" /> : <BiSolidDislike size={ 24 } color="#3A35418A" /> }>{ post.dislikes }</Button>
                     </div>
                 </div>
+            }
+            actions={
+                <StyledButtonLink to={`/${post.id}`}>Читать далее</StyledButtonLink>
             } />) :
             'Loading...'}
             <Wrapper>
@@ -93,10 +111,13 @@ export default function Blog() {
                 key={ post.id }
                 header={ post.title }
                 actions={
-                    <div>
-                        <Button onClick={() => dispatch(like(post.id))} variant='text' startIcon={post.liked ? <BiSolidLike color="#219653" size={ 24 } /> : <BiSolidLike color="#3A35418A" size={ 24 } />}>{ post.likes }</Button>
-                        <Button onClick={() => dispatch(dislike(post.id))} variant='text' startIcon={post.disliked ? <BiSolidDislike size={ 24 } color="#EB5757" /> : <BiSolidDislike size={ 24 } color="#3A35418A" /> }>{ post.dislikes }</Button>
-                    </div>
+                    <>                    
+                        <div>
+                            <Button onClick={() => dispatch(like(post.id))} variant='text' startIcon={post.liked ? <BiSolidLike color="#219653" size={ 24 } /> : <BiSolidLike color="#3A35418A" size={ 24 } />}>{ post.likes }</Button>
+                            <Button onClick={() => dispatch(dislike(post.id))} variant='text' startIcon={post.disliked ? <BiSolidDislike size={ 24 } color="#EB5757" /> : <BiSolidDislike size={ 24 } color="#3A35418A" /> }>{ post.dislikes }</Button>
+                        </div>
+                        <StyledButtonLink to={`/${post.id}`}>Читать далее</StyledButtonLink>
+                    </>
                 }/>) :
                 'Loading...'}
             </Wrapper>
