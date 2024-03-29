@@ -48,6 +48,7 @@ const InputSearch: React.FC<IInputSearchProps> = (props) => {
         startIcon,
         id,
         name,
+        value,
         onChange,
         ...other
     } = props;
@@ -55,7 +56,7 @@ const InputSearch: React.FC<IInputSearchProps> = (props) => {
     return (
         <StyledRootInputSearch { ...other }>
             { startIcon && <StyledInputSearchIcon>{ startIcon }</StyledInputSearchIcon> }
-            <StyledInputSearch type={ type } placeholder={ placeholder } id={ id } name={ name } onChange={ onChange } />
+            <StyledInputSearch type={ type } value={ value } placeholder={ placeholder } id={ id } name={ name } onChange={ onChange } />
         </StyledRootInputSearch>
     )
 }
