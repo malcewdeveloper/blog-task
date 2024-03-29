@@ -45,8 +45,8 @@ export const postsSlice = createAppSlice({
             ))
         }),
         fetchPosts: create.asyncThunk(
-            async (url?: string) => {
-                const response = await fetch('https://jsonplaceholder.typicode.com/posts?_limit=5');
+            async (params?: string) => {
+                const response = await fetch(`https://jsonplaceholder.typicode.com/posts?${params}`);
                 const posts = await response.json() as IPost[];
                 return posts.reduce((acc, post) => [...acc, {...post, liked: false, disliked: false, likes: Math.floor(Math.random() * 50), dislikes: Math.floor(Math.random() * 50)}], [] as IPost[]);
             },
