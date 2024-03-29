@@ -1,5 +1,6 @@
 import React, { HTMLAttributes } from "react";
 import { Button } from "../../UI";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 
@@ -72,7 +73,6 @@ const Card: React.FC<ICardProps> = (props) => {
                 {description && <StyledDescription>{ description }</StyledDescription>}
                 <StyledActions>
                     {actions && actions}
-                    <Button style={{ marginLeft: 'auto' }} variant='outlined'>Читать далее</Button>
                 </StyledActions>
             </StyledContentWrapper>
         </StyledCard>
