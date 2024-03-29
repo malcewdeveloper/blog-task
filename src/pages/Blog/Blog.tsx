@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { useSearchParams } from "react-router-dom";
 import { Card } from "../../components";
 import { Button, InputSearch } from "../../UI";
 import { BiSolidDislike, BiSolidLike } from "react-icons/bi";
@@ -40,21 +41,35 @@ const Wrapper = styled.div`
 export default function Blog() {
     const dispatch = useAppDispatch();
     const { entities, loading } = useAppSelector(state => state.posts);
-    console.log(entities);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [seatchValue, setSearchValue] = React.useState(searchParams.get('title') || '');   
+    const [searchTimer, setSearchTimer] = React.useState<NodeJS.Timeout | null>(null); 
 
     React.useEffect(() => {
-        dispatch(fetchPosts())
-    }, []);
+        const titleParams = searchParams.get('title');
 
-    const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if(titleParams) { dispatch(fetchPosts(`_limit=5&title=${titleParams}`)) }
+        else dispatch(fetchPosts('_limit=5'))
+
+        return () => searchTimer ? clearTimeout(searchTimer) : undefined
+    }, [searchParams])
+
+    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchValue(e.target.value);
+
+        searchTimer && clearTimeout(searchTimer);
         
-    }
+        const timer = setTimeout(() => {
+            e.target.value === '' ? setSearchParams() : setSearchParams({title: e.target.value})
+        }, 500);
+        setSearchTimer(timer)
+    }   
 
     return (
         <Container>
             <Title>Блог</Title>
             <Typography>Здесь мы делимся интересными кейсами из наших проектов, пишем про IT, а также переводим зарубежные статьи</Typography>
-            <InputSearch onChange={ handleSearch } startIcon={ <IoSearch size={ 24 } /> } id="search" name="search" placeholder="Поиск по названию статьи" style={{ marginBottom: '32px' }} />
+            <InputSearch onChange={(e) => handleSearch(e) } value={ seatchValue } startIcon={ <IoSearch size={ 24 } /> } id="search" name="search" placeholder="Поиск по названию статьи" style={{ marginBottom: '32px' }} />
             {loading === 'idle' ? 
             entities.slice(0, 1).map(post => 
             <Card 
